@@ -1,0 +1,1185 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"de",
+				"default_context"
+			],
+			[
+				"base",
+				"base_controller"
+			],
+			[
+				"crea",
+				"createMat2() -> ^mat2\t math.odin"
+			],
+			[
+				"set",
+				"setMat3ToIdentity(using m: mat3)\t math.odin"
+			],
+			[
+				"onMouseSc",
+				"OnMouseScrolledController     [proc overload, use a variant]\tcontroller.odin"
+			],
+			[
+				"OnUpdate",
+				"OnUpdateFps(using fps: ^FpsController)\t controller.odin"
+			],
+			[
+				"R",
+				"RENDER_SIZE\tconst"
+			],
+			[
+				"c",
+				"camera"
+			],
+			[
+				"OnMouseBu",
+				"OnMouseButtonDown"
+			],
+			[
+				"p",
+				"\nprint(args: ..any) -> int\t fmt"
+			],
+			[
+				"arr",
+				"arr_a"
+			],
+			[
+				"rnder",
+				"render"
+			],
+			[
+				"win",
+				"window"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "test.odin",
+			"settings":
+			{
+				"buffer_size": 2645,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "PSTR      :: cstring;\nLPSTR     :: cstring;\nPWSTR     :: ^u16;\nLPWSTR    :: ^u16;\n\nHANDLE    :: rawptr;\nPVOID     :: rawptr;\nLPVOID    :: rawptr;\nLPHANDLE  :: ^HANDLE;\nHWND      :: HANDLE;\n\nBOOL      :: b32;\n\nWORD      :: u16;\nLPWORD    :: ^WORD;\n\nDWORD     :: u32;\nLPDWORD   :: ^DWORD;\n\nBYTE      :: c.uchar;\nUINT8     :: u8;\nUINT16    :: u16;\nUINT32    :: u32;\nUINT64    :: u64;\n\nBOOLEAN :: b8;\n\nCHAR      :: c.char;\nPCHAR     :: ^CHAR;\nLPCHAR    :: ^CHAR;\n\nWCHAR     :: c.wchar_t;\nPWCHAR    :: ^WCHAR;\nLPWCHAR   :: ^WCHAR;\n\nUCHAR     :: c.uchar;\nPUCHAR    :: ^UCHAR;\nLPUCHAR   :: ^UCHAR;\n\nSHORT     :: c.short;\nPSHORT    :: ^SHORT;\nLPSHORT   :: ^SHORT;\n\nUSHORT    :: c.ushort;\nPUSHORT   :: ^USHORT;\nLPUSHORT  :: ^USHORT;\n\nINT       :: c.int;\nPINT      :: ^INT;\nLPINT     :: ^INT;\n\nUINT      :: c.uint;\nPUINT     :: ^UINT;\nLPUINT    :: ^UINT;\n\nUINT_PTR  :: uintptr;\n\nLONG      :: c.longlong;\nPLONG     :: ^LONG;\nLPLONG    :: ^LONG;\n\nULONG     :: c.ulonglong;\nPULONG    :: ^ULONG;\nLPULONG   :: ^ULONG;\n\nULONG_PTR :: ^ULONG;\n\nSIZE_T :: c.size_t;\n\nPCSTR :: cstring;\nPCWSTR :: ^WCHAR;",
+			"settings":
+			{
+				"buffer_size": 1082,
+				"line_ending": "Windows",
+				"name": "PSTR      :: cstring;"
+			}
+		},
+		{
+			"file": "src/main.odin",
+			"settings":
+			{
+				"buffer_size": 9088,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/RnDer/render.odin",
+			"settings":
+			{
+				"buffer_size": 8618,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/RnDer/engine.odin",
+			"settings":
+			{
+				"buffer_size": 3856,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/RnDer/control.odin",
+			"settings":
+			{
+				"buffer_size": 5713,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/RnDer/nodes.odin",
+			"settings":
+			{
+				"buffer_size": 2544,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "  \n# ~!~ coding: utf-8 ~!~\n\"\"\"\n   squirrel3\n   ~~~~~~~~~\n   Provides a noise function which is fast and had good distribution.  It was\n   introduced by Squirrel Eiserloh at 'Math for Game Programmers: Noise-based\n   RNG', GDC17.\n   :copyright: (c) 2017 by Heungsub Lee.\n   :license: BSD, see LICENSE for more details.\n\"\"\"\nimport random\n\n\n__all__ = ['squirrel3', 'Squirrel3Random']\n\n\n# The base bit-noise constants were crafted to have distinctive and interesting\n# bits, and have so far produced excellent experimental test results.\nNOISE1 = 0xb5297a4d  # 0b0110'1000'1110'0011'0001'1101'1010'0100\nNOISE2 = 0x68e31da4  # 0b1011'0101'0010'1001'0111'1010'0100'1101\nNOISE3 = 0x1b56c4e9  # 0b0001'1011'0101'0110'1100'0100'1110'1001\n\nCAP = 1 << 32\n\n\ndef squirrel3(n, seed=0):\n    \"\"\"Returns an unsigned integer containing 32 reasonably-well-scrambled\n    bits, based on a given (signed) integer input parameter `n` and optional\n    `seed`.  Kind of like looking up a value in an infinitely large\n    non-existent table of previously generated random numbers.\n    \"\"\"\n    n *= NOISE1\n    n += seed\n    n ^= n >> 8\n    n += NOISE2\n    n ^= n << 8\n    n *= NOISE3\n    n ^= n >> 8\n    # Cast into uint32 like the original `Squirrel3`.\n    return n % CAP\n\n\nclass Squirrel3Random(random.Random):\n\n    _n = 0\n\n    def seed(self, a=None):\n        if a is None:\n            a = 0\n        self._seed = a\n\n    def random(self):\n        n = self._n\n        self._n += 1\n        return squirrel3(n, self._seed) / float(CAP)",
+			"settings":
+			{
+				"buffer_size": 1505,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/RnDer/memory.odin",
+			"settings":
+			{
+				"buffer_size": 2089,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-mousemap",
+			"settings":
+			{
+				"buffer_size": 407,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "build.bat",
+			"settings":
+			{
+				"buffer_size": 77,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/ammar/odin/core/log/log.odin",
+			"settings":
+			{
+				"buffer_size": 4131,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+			"settings":
+			{
+				"buffer_size": 406,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/Odin.sublime-build",
+			"settings":
+			{
+				"buffer_size": 247,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "OdinRenderers.sublime-project",
+			"settings":
+			{
+				"buffer_size": 181,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "test.bat",
+			"settings":
+			{
+				"buffer_size": 36,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "Packages/Odin.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/D/D.sublime-build",
+					""
+				],
+				[
+					"Packages/D/D.sublime-build",
+					"Run"
+				]
+			],
+			[
+				"Packages/D/D.sublime-build",
+				"Run"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Odin.sublime-build",
+					""
+				],
+				[
+					"Packages/Odin.sublime-build",
+					"testing..."
+				]
+			],
+			[
+				"Packages/Odin.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: re",
+				"Package Control: Remove Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/D/Code/Odin/OdinRenderers",
+		"/D/Code/Odin/OdinRenderers/src",
+		"/D/Code/Odin/OdinRenderers/src/platforms",
+		"/D/Code/Odin/OdinRenderers/src/platforms/windows",
+		"/D/Code/Odin/OdinRenderers/src/RnDer"
+	],
+	"file_history":
+	[
+		"/D/Code/Odin/OdinRenderers/src/RnDer/render.odin",
+		"/D/Code/Odin/OdinRenderers/src/main.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/engine.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/raytrace.odin",
+		"/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/Odin/odin.sublime-build",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/math3D.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/math.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/control.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/input.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/render/raycasting/ray_cast.h",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/display.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/nodes.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/memory.odin",
+		"/D/Code/Odin/OdinRenderers/src/platforms/windows/types.odin",
+		"/C/Users/ammar/odin/core/sys/win32/general.odin",
+		"/D/Code/Odin/OdinRenderers/src/platforms/windows/utils.odin",
+		"/D/Code/Odin/OdinRenderers/src/platforms/windows/constants.odin",
+		"/D/Code/Odin/OdinRenderers/src/platforms/windows/user.odin",
+		"/D/Code/Odin/OdinRenderers/src/platforms/windows/kernel.odin",
+		"/D/Code/Odin/OdinRenderers/src/platforms/windows/gdi.odin",
+		"/D/Code/Odin/OdinRenderers/src/platforms/windows/structs.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/raycast.odin",
+		"/C/Users/ammar/odin/core/sys/win32/kernel32.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/render/raytracing/raytracer.odin",
+		"/D/Code/Odin/OdinRenderers/src/windows.odin",
+		"/C/Users/ammar/odin/core/sys/win32/user32.odin",
+		"/C/Users/ammar/odin/core/mem/allocators.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/math2D.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/perf.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/font.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/text.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/hud.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/fps.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/orb.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/buffers.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/types.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/mouse.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/allocators.odin",
+		"/C/Users/ammar/odin/core/mem/mem.odin",
+		"/C/Users/ammar/odin/core/runtime/internal.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/display/viewport.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/controller.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/nodes/scene.odin",
+		"/C/Users/ammar/odin/core/mem/alloc.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/fps.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/core/font.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/memory/buffers.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/memory/allocators.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/types.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/input/keyboard.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/input/mouse.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/math2D.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/core/perf.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/core/hud.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/core/text.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/controllers/base.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/controllers/fps.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/nodes/camera.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/nodes/transform.odin",
+		"/C/Users/ammar/odin/core/fmt/fmt.odin",
+		"/C/Users/ammar/odin/core/strings/builder.odin",
+		"/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/Odin/Odin-Make.sublime-build",
+		"/D/Code/Odin/OdinRenderers/OdinRenderers.sublime-project",
+		"/D/Code/Odin/OdinRenderers/OdinRenderers.sublime-workspace",
+		"/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/User/Package Control.sublime-settings",
+		"/C/Users/ammar/AppData/Local/Sublime Text 3/Cache/Odin/Odin.sublime-syntax.rcache",
+		"/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/User/Package Control.last-run",
+		"/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/User/Package Control.cache/01524fae79697630d0454ba3fabd9414",
+		"/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/User/Package Control.cache/01524fae79697630d0454ba3fabd9414.info",
+		"/D/Code/Odin/OdinRenderers/src/lib/core/string.odin",
+		"/D/Code/Odin/OdinRenderers/test.bat",
+		"/D/Code/Odin/OdinRenderers/src/lib/math/math2D.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/math/math3D.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/math/math1D.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/core/types.odin",
+		"/D/Code/Odin/OdinRenderers/test/test.odin",
+		"/D/Code/Odin/OdinRenderers/src/lib/core/types.h",
+		"/D/Code/Odin/OdinRenderers/RnDer/types.odin",
+		"/D/Code/Odin/OdinRenderers/win32.odin",
+		"/D/Code/Odin/OdinRenderers/test.odin",
+		"/D/Code/Odin/OdinRenderers/types.odin",
+		"/D/Code/Odin/OdinRenderers/main.odin",
+		"/D/Code/Odin/OdinRenderers/b.odin",
+		"/D/Code/Odin/OdinRenderers/a.odin",
+		"/D/Code/Odin/OdinRenderers/t/main.odin",
+		"/D/Code/Odin/OdinRenderers/RnDer/a.odin",
+		"/D/Code/Odin/OdinRenderers/build.bat",
+		"/D/Code/Odin/OdinRenderers/test/main.odin",
+		"/D/Code/Odin/OdinRenderers/RnDer/main.odin",
+		"/D/Code/Odin/OdinRenderers/engine.odin",
+		"/C/Program Files/Sublime Text 3/Packages/C++.sublime-package",
+		"/D/Code/Odin/OdinRenderers/odin.sublime-build",
+		"/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings"
+	],
+	"find":
+	{
+		"height": 44.0
+	},
+	"find_in_files":
+	{
+		"height": 114.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"raw_inputs",
+			"ShowWindow",
+			"RAWKEYBOARD",
+			"LPWSTR",
+			"#no_alias using",
+			"Engine* engine",
+			"->",
+			"void ",
+			"RC(",
+			"RT(",
+			"void ",
+			"Engine* engine",
+			"->",
+			"no_alis",
+			"noalias",
+			"RegisterRawInputDevices",
+			"ReleaseCapture",
+			"GetRawInputData",
+			"HRAWINPUT",
+			"RID",
+			"RID_INPUT",
+			"LPVOID",
+			"PUINT",
+			"perf_counter",
+			"LPRECT",
+			"WM_DESTROY",
+			"HRGN",
+			"hInstance",
+			"CS_DBLCLKS",
+			"CW_USEDEFAULT",
+			"HWND",
+			"CreateWindow",
+			"CreateWindowA",
+			"size_t",
+			"RAW_INPUT_MAX_SIZE",
+			"PAGE_READWRITE",
+			"BITMAPINFO",
+			"Wnd_Class_Ex_A",
+			"WNDCLASSA",
+			"Lpvoid",
+			": mat3",
+			"uyg",
+			"cos",
+			"sin",
+			"IZ",
+			"IY",
+			"IX",
+			"lX",
+			"getPointOnUnitCircle",
+			"v2",
+			"v1",
+			": mat2",
+			"delta_time",
+			"OrbDolly",
+			"OrbPan",
+			"OrbOrbit",
+			"OrbPan",
+			"orb.",
+			"type_id",
+			"address",
+			"pixels",
+			"sphere->",
+			"buttons.",
+			"fps.",
+			"Coords2",
+			".key",
+			"setMatrix3x3ToIdentity",
+			"initMatrix3x3",
+			"transform->",
+			"->",
+			"mouse.",
+			"controller.",
+			"mouse.",
+			"->",
+			"LAST_chr_CODE",
+			"FIRST_chr_CODE",
+			"t_offset",
+			"character",
+			"transmute(Hinstance)(",
+			"string",
+			"Matrix3x3",
+			"z_axis",
+			"y_axis",
+			"x_axis",
+			" c *",
+			" s *",
+			"roll_matrix.",
+			"pitch_matrix.",
+			"yaw_matrix.",
+			"vec3 z_axis = *",
+			"vec3 y_axis = *",
+			"vec3 x_axis = *",
+			"vec2",
+			"prooc",
+			"z_axis->",
+			"y_axis->",
+			"x_axis->",
+			"Matrix3x3",
+			"Vector3",
+			"3D(",
+			"inline void ",
+			"Vector2",
+			"Vector3",
+			"Vector2",
+			"Matrix2x2",
+			"m21",
+			"m22",
+			"m12",
+			"m11",
+			"m12",
+			"m11",
+			"y_axis",
+			"x_axis",
+			"z_axis",
+			"y_axis",
+			"x_axis",
+			"trg",
+			"src",
+			"change_in_velocity",
+			"target_velocity",
+			"current_velocity",
+			"2D(",
+			"inline void ",
+			"->",
+			"fmt"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"using #no_alias",
+			"engine ^Engine",
+			".",
+			"",
+			"RC :: proc(",
+			"RT :: proc(",
+			"",
+			"engine: ^Engine",
+			".",
+			"no_alias",
+			": ^mat3",
+			"using",
+			"x",
+			"y",
+			"lhs_Z",
+			"lhs_Y",
+			"lhs_X",
+			"rhs",
+			"lhs",
+			": ^mat2",
+			"",
+			"typeid",
+			"current",
+			"",
+			"MouseCoords",
+			".key_code",
+			"key_code",
+			"setMat3ToIdentity",
+			"initMat3",
+			"",
+			".",
+			"",
+			".",
+			"LAST_CHAR_CODE",
+			"FIRST_CHAR_CODE",
+			"offset",
+			"chr",
+			"s",
+			"str",
+			"mat3",
+			"Z",
+			"Y",
+			"X",
+			" cos *",
+			" sin *",
+			"",
+			"IZ := ",
+			"IY := ",
+			"IX := ",
+			"",
+			"proc",
+			"Z.",
+			"Y.",
+			"X.",
+			"mat3",
+			"vec3",
+			"3D :: prooc(",
+			"vec2",
+			"vec3",
+			"vec2",
+			"mat2",
+			"mY.x",
+			"mY.y",
+			"mX.y",
+			"mX.x",
+			"mX.y",
+			"mX.x",
+			"Y",
+			"X",
+			"Z",
+			"Y",
+			"X",
+			"target",
+			"current",
+			"d",
+			"trg",
+			"src",
+			"2D :: proc(",
+			"",
+			"."
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "test.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2645,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2587,
+								2611
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1809.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1082,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1082,
+								1082
+							]
+						],
+						"settings":
+						{
+							"auto_name": "PSTR      :: cstring;",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 20.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/main.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9088,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9062,
+								9062
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5128.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/RnDer/render.odin",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 8618,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 260.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/RnDer/engine.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3856,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2659,
+								2659
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1829.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/RnDer/control.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5713,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5275,
+								5275
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/RnDer/nodes.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2544,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1871,
+								1871
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1940.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1505,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								744,
+								744
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 432.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/RnDer/memory.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2089,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								488,
+								488
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1360.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 9,
+					"file": "/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-mousemap",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 407,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								213,
+								213
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "build.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 77,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								23,
+								32
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "/C/Users/ammar/odin/core/log/log.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4131,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2923,
+								2003
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1949.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 406,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								153,
+								153
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/Odin.sublime-build",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 247,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								162,
+								162
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "OdinRenderers.sublime-project",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 181,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20,
+								20
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "test.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 36,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								18,
+								36
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 31.0
+	},
+	"input":
+	{
+		"height": 44.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 406.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/Odin.sublime-build",
+	"project": "OdinRenderers.sublime-project",
+	"replace":
+	{
+		"height": 79.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 199.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

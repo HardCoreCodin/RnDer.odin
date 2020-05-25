@@ -1,5 +1,5 @@
 package main
-import "core:fmt"
+
 import "core:os"
 import "core:runtime"
 import "RnDer"

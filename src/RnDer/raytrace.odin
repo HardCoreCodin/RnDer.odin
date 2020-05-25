@@ -11,7 +11,6 @@ RayTracer :: struct {
     inverted_camera_rotation: ^mat3
 };
 
-import "core:fmt"
 onRenderRT :: proc(engine: ^Engine) {
 	using engine;
 	using scene;

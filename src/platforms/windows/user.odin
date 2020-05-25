@@ -40,8 +40,7 @@ foreign user {
         cbSizeHeader: UINT
     ) -> UINT ---;
     
-    @(link_name="DefWindowProcW") 
-    DefWindowProc :: proc(
+    DefWindowProcA :: proc(
         hWnd   : HWND,
         Msg    : UINT,
         wParam : WPARAM,

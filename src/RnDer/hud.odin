@@ -40,7 +40,7 @@ setRationalModeInHUD :: proc(using hud: ^HUD, is_rat: bool) {
 }
 
 createHUD :: proc() -> ^HUD {
-    hud := new(HUD);
+    hud := Alloc(HUD);
     using hud;
 
     is_visible = true;

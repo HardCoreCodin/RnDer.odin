@@ -41,7 +41,7 @@ RendererType :: enum {
 
 Renderer :: struct {
     type: RendererType,
-    title: string,
+    title: cstring,
     on: RendererCallbacks
 };
 

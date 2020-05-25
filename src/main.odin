@@ -1,18 +1,14 @@
 package main
 
-import "core:os"
-import "core:runtime"
 import "RnDer"
 
 engine: ^RnDer.Engine;
 default_context: runtime.Context;
 
 when ODIN_OS == "windows" {
-
+    import "core:runtime"
     import win "platforms/windows"
 
-    WINDOW_TITLE: cstring;
-    window_title_buf: [20]byte;
     window_class: win.WNDCLASSA;
     window: win.HWND;
     win_dc: win.HDC;
@@ -46,15 +42,8 @@ when ODIN_OS == "windows" {
         win.OutputDebugStringA(win.LPCSTR(str)); 
     }
 
-    getWindowTitle :: proc() {
-        for c, i in engine.active_viewport.renderer.title do window_title_buf[i] = byte(c);
-        window_title_buf[len(engine.active_viewport.renderer.title)] = 0;
-        WINDOW_TITLE = cstring(&window_title_buf[0]);
-    }
-
     updateWindowTitle :: proc() {
-        getWindowTitle();
-        win.SetWindowTextA(window, WINDOW_TITLE); 
+        win.SetWindowTextA(window, engine.active_viewport.renderer.title); 
     }
     
     getTicks :: proc() -> u64 { 
@@ -183,7 +172,7 @@ when ODIN_OS == "windows" {
                 }
 
             case:
-                return DefWindowProc(hWnd, message, wParam, lParam);
+                return DefWindowProcA(hWnd, message, wParam, lParam);
         }
 
         return 0;
@@ -201,10 +190,7 @@ when ODIN_OS == "windows" {
                 LPVOID(uintptr(MEMORY_BASE)),
                 u64(MEMORY_SIZE),
                 MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
-        if address == nil {
-            os.write_string(os.stdout, "Failed to allocate virtual memory!");
-            os.exit(-1);
-        }
+        when ODIN_DEBUG do assert(address != nil, "Failed to allocate virtual memory!");
 
         memory.address = cast(^u8)address;
     
@@ -212,9 +198,6 @@ when ODIN_OS == "windows" {
         QueryPerformanceFrequency(&performance_frequency);
         engine = createEngine(updateWindowTitle, printDebugString, getTicks, u64(performance_frequency.QuadPart));
 
-
-
-        getWindowTitle();
         WINDOW_CLASS: cstring = "RnDer";
         HInstance := transmute(HINSTANCE)(GetModuleHandleA(nil));
         
@@ -249,26 +232,21 @@ when ODIN_OS == "windows" {
 
         window = CreateWindowA(
                 WINDOW_CLASS,
-                nil, WS_OVERLAPPEDWINDOW,
+                engine.active_viewport.renderer.title, WS_OVERLAPPEDWINDOW,
                 CW_USEDEFAULT,
                 CW_USEDEFAULT,
                 500, 400, 
                 nil, nil, hInstance, nil
         );
-        if window == nil {
-            os.write_string(os.stdout, "Failed to create window!");
-            os.exit(-1);
-        }
+        when ODIN_DEBUG do assert(window != nil, "Failed to create window!");
 
         raw_inputs = cast(^RAWINPUT)(allocate(Kilobytes(1)));
         // raw_inputs = cast(^RAWINPUT)(arena_allocate(&memory, Kilobytes(1)));
 
         raw_input_device.usUsagePage = 0x01;
         raw_input_device.usUsage = 0x02;
-        if !RegisterRawInputDevices(&raw_input_device, 1, size_of(raw_input_device)) {
-            os.write_string(os.stdout, "Failed to register raw input device!");
-            os.exit(-1);
-        }
+        err := RegisterRawInputDevices(&raw_input_device, 1, size_of(raw_input_device));
+        when ODIN_DEBUG do assert(bool(err), "Failed to register raw input device!");
 
         win_dc = GetDC(window);
         ShowWindow(window, 10);

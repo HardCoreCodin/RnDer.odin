@@ -36,7 +36,7 @@ foreign user {
         hRawInput   : HRAWINPUT,
         uiCommand   : UINT,
         pData       : LPVOID,
-        pcbSize     : ^UINT,
+        pcbSize     : PUINT,
         cbSizeHeader: UINT
     ) -> UINT ---;
     

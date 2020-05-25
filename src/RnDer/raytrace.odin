@@ -1,6 +1,6 @@
 package RnDer
 
-RAY_TRACER_TITLE: cstring = "RayTrace";
+RAY_TRACER_TITLE :: "RayTrace";
 RAY_TRACER_RAYS_PER_PIXEL :: 1;
 RAY_TRACER_RAY_COUNT :: RENDER_SIZE * RAY_TRACER_RAYS_PER_PIXEL;
 
@@ -11,6 +11,7 @@ RayTracer :: struct {
     inverted_camera_rotation: ^mat3
 };
 
+import "core:fmt"
 onRenderRT :: proc(engine: ^Engine) {
 	using engine;
 	using scene;
@@ -36,16 +37,18 @@ generateRaysRT :: proc(engine: ^Engine) {
     z := f32(width) * focal_length;
     z2 := z * z;
     factor, y2_plus_z2: f32;
-    ray_direction: ^vec3 = &ray_directions[0];
-
+    
+    ray_index: u32 = 0;
     for y: i32 = height - 1; y > -height; y -= 2 {
         y2_plus_z2 = f32(y*y) + z2;
         for x: i32 = 1 - width; x < width; x += 2 {
             factor = 1.0 / sqrtf(f32(x*x) + y2_plus_z2);
-            ray_direction.x = f32(x) * factor;
-            ray_direction.y = f32(y) * factor;
-            ray_direction.z = f32(z) * factor;
-            ray_direction := cast(^vec3)(uintptr(int(uintptr(ray_direction)) + size_of(vec3)));
+            ray_directions[ray_index] = {
+                f32(x) * factor,
+                f32(y) * factor,
+                f32(z) * factor
+            };                       
+            ray_index += 1;
         }
     }
 }
@@ -56,7 +59,7 @@ onResizeRT :: proc(engine: ^Engine) {
 
 onZoomRT :: proc(engine: ^Engine) {
     generateRaysRT(engine);
-    engine.active_viewport.controller.changed.fov = false;
+    engine.active_viewport.controller.changed.zoom = false;
 }
 
 onRotateRT :: proc(engine: ^Engine) {
@@ -100,9 +103,12 @@ createRayTracer :: proc(engine: ^Engine) -> ^RayTracer {
     on.rotate = onRotateRT;
     on.resize = onResizeRT;
     on.render = onRenderRT;
+    inverted_camera_rotation = createMat3();
     ray_directions = Alloc([RAY_TRACER_RAY_COUNT]vec3);
     closest_hit = Alloc(RayHit);
-    inverted_camera_rotation = createMat3();
+    using closest_hit;
+    position = Alloc(vec3);
+    normal = Alloc(vec3);
 
     return ray_tracer;
 }
@@ -123,7 +129,7 @@ shadeClosestHitByNormal :: inline proc(using closestHit: ^RayHit, pixel: ^Pixel)
 rayIntersectsWithSpheres :: proc(
 	using closest_hit: ^RayHit, // The hit structure of the closest intersection of the ray with the spheres
     ray_direction: ^vec3,  // The direction that the ray is aiming at
-    spheres: ^[SPHERE_COUNT]Sphere
+    spheres: []Sphere
 ) -> bool {
     r, r2, // The radius of the current sphere (and it's square)
     d, d2, // The distance from the origin to the position of the current intersection (and it's square)
@@ -140,15 +146,12 @@ rayIntersectsWithSpheres :: proc(
     p := &_p; // The position of the current intersection of the ray with the spheres
     t := &_t;
 
-    sphere: ^Sphere = &spheres[0];
-    using sphere;
-
     // Loop over all the spheres and intersect the ray against them:
-    for i in 0..<SPHERE_COUNT {
+    for sphere in spheres {
+        using sphere;
         s = view_position;
         r = radius;
         r2 = r*r;
-        sphere := cast(^Sphere)(uintptr(int(uintptr(sphere)) + size_of(Sphere)));
 
         o2c = dot3D(ray_direction, s);
         if o2c > 0 {
@@ -158,7 +161,7 @@ rayIntersectsWithSpheres :: proc(
             if d2 <= r2 {
                 r2_minus_d2 = r2 - d2;
                 d = o2c - r2_minus_d2;
-                if d > 0 && d <= D {
+                if ((d > 0) && (d <= D)) {
                     S = s; D = d; R = r; O2C = o2c; R2_minus_D2 = r2_minus_d2;
                     position.x = p.x;
                     position.y = p.y;

@@ -37,12 +37,9 @@ Engine :: struct {
     is_running: bool
 };
 
-getTitle :: inline proc(using engine: ^Engine) -> cstring do 
-    return active_viewport.renderer.title;
-
 resize :: inline proc(using engine: ^Engine) {
     active_viewport.renderer.on.resize(engine);
-    updateHUDDimensions(hud, frame_buffer);
+    updateHUDDimensions(hud, frame_buffer.width, frame_buffer.height);
 }
 
 updateAndRender :: proc(using engine: ^Engine) {
@@ -65,8 +62,8 @@ updateAndRender :: proc(using engine: ^Engine) {
 
     controller.on.update(engine);
 
-    if controller.changed.fov {
-        controller.changed.fov = false;
+    if controller.changed.zoom {
+        controller.changed.zoom = false;
         renderer.on.zoom(engine);
     }
 
@@ -84,8 +81,9 @@ updateAndRender :: proc(using engine: ^Engine) {
 
     endFramePerf(perf);
     if hud.is_visible {
+        updateHUDZoom(hud, controller.zoom_amount);
         if perf.accum.frames != 0 do updateHUDCounters(hud, perf);
-        drawText(frame_buffer, hud.text[:], HUD_COLOR, frame_buffer.width - HUD_RIGHT - HUD_WIDTH, HUD_TOP);
+        drawText(hud.text, hud.pixel, frame_buffer.width - HUD_RIGHT - HUD_WIDTH, HUD_TOP, frame_buffer);
     }
 
 //    if (buttons.first.is_pressed) engine.renderer = &ray_tracer.renderer;

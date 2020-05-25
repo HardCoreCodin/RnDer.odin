@@ -182,43 +182,44 @@ setPointOnUnitSphere :: proc(s, t: f32) -> (point: vec3) {
 
     return;
 }
+
 sub3D :: proc(#no_alias lhs: ^vec3, #no_alias rhs: ^vec3, using #no_alias out: ^vec3) {
     x = lhs.x - rhs.x;
     y = lhs.y - rhs.y;
     z = lhs.z - rhs.z;
 }
-isub3D :: proc(using #no_alias i: ^vec3, #no_alias v: ^vec3) {
-    x -= v.x;
-    y -= v.y;
-    z -= v.z;
+isub3D :: proc(using #no_alias i: ^vec3, #no_alias rhs: ^vec3) {
+    x -= rhs.x;
+    y -= rhs.y;
+    z -= rhs.z;
 }
-add3D :: proc(#no_alias lhs: ^vec3, #no_alias rhs: ^vec3, using #no_alias o: ^vec3) {
+add3D :: proc(#no_alias lhs: ^vec3, #no_alias rhs: ^vec3, using #no_alias out: ^vec3) {
     x = lhs.x + rhs.x;
     y = lhs.y + rhs.y;
     z = lhs.z + rhs.z;
 }
-iadd3D :: proc(using #no_alias i: ^vec3, #no_alias v: ^vec3) {
-    x += v.x;
-    y += v.y;
-    z += v.z;
+iadd3D :: proc(using #no_alias lhs: ^vec3, #no_alias rhs: ^vec3) {
+    x += rhs.x;
+    y += rhs.y;
+    z += rhs.z;
 }
-scale3D :: proc(using #no_alias i: ^vec3, f: f32, #no_alias v: ^vec3) {
-    y = v.y * f;
-    z = v.z * f;
-    x = v.x * f;
+scale3D :: proc(#no_alias lhs: ^vec3, f: f32, #no_alias using out: ^vec3) {
+    y = lhs.y * f;
+    z = lhs.z * f;
+    x = lhs.x * f;
 }
 iscale3D :: proc(using #no_alias i: ^vec3, f: f32) {
     x *= f;
     y *= f;
     z *= f;
 }
-mul3D :: proc(#no_alias v: ^vec3, using m: ^mat3, using #no_alias o: ^vec3) {
-    x = v.x * X.x + v.y * Y.x + v.z * Z.x;
-    y = v.x * X.y + v.y * Y.y + v.z * Z.y;
-    z = v.x * X.z + v.y * Y.z + v.z * Z.z;    
+mul3D :: proc(#no_alias lhs: ^vec3, using matrix: ^mat3, using #no_alias out: ^vec3) {
+    x = lhs.x * X.x + lhs.y * Y.x + lhs.z * Z.x;
+    y = lhs.x * X.y + lhs.y * Y.y + lhs.z * Z.y;
+    z = lhs.x * X.z + lhs.y * Y.z + lhs.z * Z.z;    
 }
-imul3D :: proc(using #no_alias i: ^vec3, using m: ^mat3) {
-    v := i^;
+imul3D :: proc(using #no_alias lhs: ^vec3, using matrix: ^mat3) {
+    v := lhs^;
     x = v.x * X.x + v.y * Y.x + v.z * Z.x;
     y = v.x * X.y + v.y * Y.y + v.z * Z.y;
     z = v.x * X.z + v.y * Y.z + v.z * Z.z;    

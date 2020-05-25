@@ -1,5 +1,5 @@
 package main
-
+import "core:fmt"
 import "core:os"
 import "core:runtime"
 import "RnDer"
@@ -11,16 +11,33 @@ when ODIN_OS == "windows" {
 
     import win "platforms/windows"
 
+    WINDOW_TITLE: cstring;
+    window_title_buf: [20]byte;
     window_class: win.WNDCLASSA;
     window: win.HWND;
     win_dc: win.HDC;
     info: win.BITMAPINFO;
     win_rect: win.RECT;
-    rid: win.RAWINPUTDEVICE;
+
     raw_inputs: ^win.RAWINPUT;
-    raw_mouse: win.RAWMOUSE;
-    size_ri: win.UINT; 
-    size_rih: win.UINT = size_of(win.RAWINPUTHEADER);
+    raw_input_handle: win.HRAWINPUT;
+    raw_input_device: win.RAWINPUTDEVICE;
+    raw_input_size: win.UINT;
+    raw_input_size_ptr: win.PUINT = cast(win.PUINT)(&raw_input_size); 
+    raw_input_header_size: win.UINT = size_of(win.RAWINPUTHEADER);
+
+    getRawInput :: inline proc(data: win.LPVOID = nil) -> win.UINT do return
+        win.GetRawInputData(raw_input_handle, win.RID_INPUT, data, raw_input_size_ptr, raw_input_header_size);
+
+    hasRawInput :: inline proc() -> bool do return getRawInput() == 0 && raw_input_size != 0;
+    hasRawMouseInput :: inline proc(lParam: win.LPARAM) -> bool {
+        raw_input_handle = transmute(win.HRAWINPUT)(uintptr(win.INT(lParam)));
+        return (
+            hasRawInput() &&
+            getRawInput(win.LPVOID(raw_inputs)) == raw_input_size && 
+            raw_inputs.header.dwType == win.RIM_TYPEMOUSE
+        );
+    }
 
     ticks_of_last_frame, ticks_of_current_frame, target_ticks_per_frame: u64;
     perf_counter: win.LARGE_INTEGER;
@@ -28,16 +45,23 @@ when ODIN_OS == "windows" {
     printDebugString :: proc(str: cstring) { 
         win.OutputDebugStringA(win.LPCSTR(str)); 
     }
-    
-    updateWindowTitle :: proc() { 
-        win.SetWindowTextA(window, RnDer.getTitle(engine)); 
+
+    getWindowTitle :: proc() {
+        for c, i in engine.active_viewport.renderer.title do window_title_buf[i] = byte(c);
+        window_title_buf[len(engine.active_viewport.renderer.title)] = 0;
+        WINDOW_TITLE = cstring(&window_title_buf[0]);
+    }
+
+    updateWindowTitle :: proc() {
+        getWindowTitle();
+        win.SetWindowTextA(window, WINDOW_TITLE); 
     }
     
     getTicks :: proc() -> u64 { 
         win.QueryPerformanceCounter(&perf_counter); 
         return u64(perf_counter.QuadPart); 
     }
-import "core:fmt"
+
     WndProc:: proc "std" (
         hWnd: win.HWND, 
         message: win.UINT, 
@@ -65,7 +89,7 @@ import "core:fmt"
 
                 width = u16(biWidth);
                 height = u16(-biHeight);
-                size = u32(width * height);
+                size = u32(width) * u32(height);
 
                 resize(engine);
                 updateAndRender(engine);
@@ -152,16 +176,10 @@ import "core:fmt"
                 onMouseMovedAbsolute(mouse, i16(GET_X_LPARAM(lParam)), i16(GET_Y_LPARAM(lParam)));
 
             case WM_INPUT:
-                size_ri = 0;
-                if (GetRawInputData(HRAWINPUT(uintptr(lParam)), RID_INPUT, nil               , &size_ri, size_rih) != 0       && size_ri != 0 &&
-                    GetRawInputData(HRAWINPUT(uintptr(lParam)), RID_INPUT, LPVOID(raw_inputs), &size_ri, size_rih) == size_ri &&
-                     raw_inputs.header.dwType == RIM_TYPEMOUSE) {
-                    raw_mouse = raw_inputs.data.mouse;
-                    if raw_mouse.lLastX != 0 || 
-                       raw_mouse.lLastY != 0 do onMouseMovedRelative(mouse, 
-                        i16(raw_mouse.lLastX), 
-                        i16(raw_mouse.lLastY)
-                    );
+                if hasRawMouseInput(lParam) {
+                    using raw_inputs.data.mouse;
+                    if lLastX != 0 || lLastY != 0 do
+                        onMouseMovedRelative(mouse, i16(lLastX), i16(lLastY));
                 }
 
             case:
@@ -189,14 +207,15 @@ import "core:fmt"
         }
 
         memory.address = cast(^u8)address;
-        // arena_init(&memory, MEMORY_SIZE, address);
     
         performance_frequency: LARGE_INTEGER;
         QueryPerformanceFrequency(&performance_frequency);
         engine = createEngine(updateWindowTitle, printDebugString, getTicks, u64(performance_frequency.QuadPart));
 
+
+
+        getWindowTitle();
         WINDOW_CLASS: cstring = "RnDer";
-        WINDOW_TITLE: cstring = getTitle(engine);
         HInstance := transmute(HINSTANCE)(GetModuleHandleA(nil));
         
         target_ticks_per_frame = engine.perf.ticks_per_second / 60;
@@ -230,7 +249,7 @@ import "core:fmt"
 
         window = CreateWindowA(
                 WINDOW_CLASS,
-                WINDOW_TITLE, WS_OVERLAPPEDWINDOW,
+                nil, WS_OVERLAPPEDWINDOW,
                 CW_USEDEFAULT,
                 CW_USEDEFAULT,
                 500, 400, 
@@ -244,15 +263,15 @@ import "core:fmt"
         raw_inputs = cast(^RAWINPUT)(allocate(Kilobytes(1)));
         // raw_inputs = cast(^RAWINPUT)(arena_allocate(&memory, Kilobytes(1)));
 
-        rid.usUsagePage = 0x01;
-        rid.usUsage = 0x02;
-        if !RegisterRawInputDevices(&rid, 1, size_of(rid)) {
+        raw_input_device.usUsagePage = 0x01;
+        raw_input_device.usUsage = 0x02;
+        if !RegisterRawInputDevices(&raw_input_device, 1, size_of(raw_input_device)) {
             os.write_string(os.stdout, "Failed to register raw input device!");
             os.exit(-1);
         }
 
         win_dc = GetDC(window);
-        ShowWindow(window, 1);
+        ShowWindow(window, 10);
 
         message: MSG;
         ticks_of_last_frame = getTicks();
@@ -269,5 +288,4 @@ import "core:fmt"
 
 main :: proc() {
     run();
-    buf: ^[16 * 16 * 1024 * 1024]u16;
 }

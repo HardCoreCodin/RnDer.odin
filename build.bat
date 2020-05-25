@@ -1,1 +1,1 @@
-odin run src/main.odin -llvm-api -out=bin/RnDer.exe -debug -subsystem=windows
+odin run src/main.odin -out=bin/RnDer.exe -subsystem=windows -opt=3

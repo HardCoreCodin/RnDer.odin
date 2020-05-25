@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"L",
+				"LPARAM\tdistinct windows"
+			],
+			[
+				"ha",
+				"hasRawMouseInput()\t main.odin"
+			],
+			[
+				"frame",
+				"FrameBuffer"
+			],
+			[
 				"de",
 				"default_context"
 			],
@@ -63,7 +75,7 @@
 			"file": "test.odin",
 			"settings":
 			{
-				"buffer_size": 2645,
+				"buffer_size": 6143,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -81,7 +93,43 @@
 			"file": "src/main.odin",
 			"settings":
 			{
-				"buffer_size": 9088,
+				"buffer_size": 9410,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/platforms/windows/constants.odin",
+			"settings":
+			{
+				"buffer_size": 1745,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/platforms/windows/user.odin",
+			"settings":
+			{
+				"buffer_size": 2835,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/platforms/windows/types.odin",
+			"settings":
+			{
+				"buffer_size": 1151,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/platforms/windows/structs.odin",
+			"settings":
+			{
+				"buffer_size": 2597,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -90,33 +138,120 @@
 			"file": "src/RnDer/render.odin",
 			"settings":
 			{
-				"buffer_size": 8618,
+				"buffer_size": 935,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/RnDer/raytrace.odin",
+			"settings":
+			{
+				"buffer_size": 5749,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/RnDer/raycast.odin",
+			"settings":
+			{
+				"buffer_size": 1564,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/RnDer/camera.odin",
+			"settings":
+			{
+				"buffer_size": 6440,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "package RnDer"
+			}
+		},
+		{
+			"file": "src/RnDer/keyboard.odin",
+			"settings":
+			{
+				"buffer_size": 1839,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/RnDer/mouse.odin",
+			"settings":
+			{
+				"buffer_size": 2843,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "package RnDer"
+			}
+		},
+		{
+			"file": "src/RnDer/math.odin",
+			"settings":
+			{
+				"buffer_size": 12213,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/RnDer/text.odin",
+			"settings":
+			{
+				"buffer_size": 7694,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "package EnDer"
+			}
+		},
+		{
+			"file": "src/RnDer/hud.odin",
+			"settings":
+			{
+				"buffer_size": 2087,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "package RnDer"
+			}
+		},
+		{
+			"file": "src/RnDer/perf.odin",
+			"settings":
+			{
+				"buffer_size": 2611,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "package RnDer"
 			}
 		},
 		{
 			"file": "src/RnDer/engine.odin",
 			"settings":
 			{
-				"buffer_size": 3856,
+				"buffer_size": 3933,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/RnDer/control.odin",
+			"file": "src/RnDer/transform.odin",
 			"settings":
 			{
-				"buffer_size": 5713,
+				"buffer_size": 799,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/RnDer/nodes.odin",
+			"file": "src/RnDer/scene.odin",
 			"settings":
 			{
-				"buffer_size": 2544,
+				"buffer_size": 1132,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -151,16 +286,8 @@
 			"file": "build.bat",
 			"settings":
 			{
-				"buffer_size": 77,
+				"buffer_size": 67,
 				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/ammar/odin/core/log/log.odin",
-			"settings":
-			{
-				"buffer_size": 4131,
 				"line_ending": "Windows"
 			}
 		},
@@ -280,6 +407,12 @@
 	],
 	"file_history":
 	[
+		"/C/Users/ammar/odin/core/sys/win32/general.odin",
+		"/D/Code/Odin/OdinRenderers/src/platforms/windows/types.odin",
+		"/C/Users/ammar/odin/core/os/os_essence.odin",
+		"/C/Users/ammar/odin/core/mem/raw.odin",
+		"/C/Users/ammar/odin/core/log/log.odin",
+		"/D/Code/Odin/OdinRenderers/src/RnDer/display.odin",
 		"/D/Code/Odin/OdinRenderers/src/RnDer/render.odin",
 		"/D/Code/Odin/OdinRenderers/src/main.odin",
 		"/D/Code/Odin/OdinRenderers/src/RnDer/engine.odin",
@@ -290,11 +423,8 @@
 		"/D/Code/Odin/OdinRenderers/src/RnDer/control.odin",
 		"/D/Code/Odin/OdinRenderers/src/RnDer/input.odin",
 		"/D/Code/Odin/OdinRenderers/src/RnDer/render/raycasting/ray_cast.h",
-		"/D/Code/Odin/OdinRenderers/src/RnDer/display.odin",
 		"/D/Code/Odin/OdinRenderers/src/RnDer/nodes.odin",
 		"/D/Code/Odin/OdinRenderers/src/RnDer/memory.odin",
-		"/D/Code/Odin/OdinRenderers/src/platforms/windows/types.odin",
-		"/C/Users/ammar/odin/core/sys/win32/general.odin",
 		"/D/Code/Odin/OdinRenderers/src/platforms/windows/utils.odin",
 		"/D/Code/Odin/OdinRenderers/src/platforms/windows/constants.odin",
 		"/D/Code/Odin/OdinRenderers/src/platforms/windows/user.odin",
@@ -376,7 +506,7 @@
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 42.0
 	},
 	"find_in_files":
 	{
@@ -390,6 +520,18 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"getTitle",
+			"WINDOW_TITLE",
+			"raw_input_size_ptr",
+			"raw_inputs",
+			"HRAWINPUT",
+			"GetRawInputData",
+			"size_ri",
+			"size_rih",
+			"chr_pixel_index",
+			"HUD_LENGTH",
+			"cst",
+			"^u8",
 			"raw_inputs",
 			"ShowWindow",
 			"RAWKEYBOARD",
@@ -505,16 +647,7 @@
 			"x_axis",
 			"z_axis",
 			"y_axis",
-			"x_axis",
-			"trg",
-			"src",
-			"change_in_velocity",
-			"target_velocity",
-			"current_velocity",
-			"2D(",
-			"inline void ",
-			"->",
-			"fmt"
+			"x_axis"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -522,6 +655,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"character_pixel_index",
 			"using #no_alias",
 			"engine ^Engine",
 			".",
@@ -621,15 +755,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2645,
+						"buffer_size": 6143,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2587,
-								2611
+								5605,
+								5631
 							]
 						],
 						"settings":
@@ -638,10 +772,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1809.0,
+						"translation.y": 4045.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -669,7 +803,7 @@
 						"translation.y": 20.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
@@ -678,15 +812,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9088,
+						"buffer_size": 9410,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9062,
-								9062
+								1405,
+								1405
 							]
 						],
 						"settings":
@@ -695,8 +829,8 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 5128.0,
+						"translation.x": 37.0,
+						"translation.y": 657.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -704,49 +838,47 @@
 				},
 				{
 					"buffer": 3,
-					"file": "src/RnDer/render.odin",
-					"semi_transient": true,
+					"file": "src/platforms/windows/constants.odin",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8618,
+						"buffer_size": 1745,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1587,
+								1587
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Odin/odin.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Odin/odin.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 260.0,
+						"translation.y": 812.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "src/RnDer/engine.odin",
+					"file": "src/platforms/windows/user.odin",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3856,
+						"buffer_size": 2835,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2659,
-								2659
+								2335,
+								2335
 							]
 						],
 						"settings":
@@ -756,27 +888,115 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1829.0,
+						"translation.y": 1844.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "src/RnDer/control.odin",
+					"file": "src/platforms/windows/types.odin",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5713,
+						"buffer_size": 1151,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5275,
-								5275
+								509,
+								515
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 160.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/platforms/windows/structs.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2597,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2500,
+								2507
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2284.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 19,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/RnDer/render.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 935,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								828,
+								828
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 510.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/RnDer/raytrace.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5749,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								34,
+								34
 							]
 						],
 						"settings":
@@ -789,24 +1009,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "src/RnDer/nodes.odin",
+					"buffer": 9,
+					"file": "src/RnDer/raycast.odin",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2544,
+						"buffer_size": 1564,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1871,
-								1871
+								35,
+								35
 							]
 						],
 						"settings":
@@ -816,14 +1036,309 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1940.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 10,
+					"file": "src/RnDer/camera.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6440,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4421,
+								4421
+							]
+						],
+						"settings":
+						{
+							"auto_name": "package RnDer",
+							"syntax": "Packages/Odin/odin.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 4200.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/RnDer/keyboard.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1839,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1839,
+								1839
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "src/RnDer/mouse.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2843,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1765,
+								1765
+							]
+						],
+						"settings":
+						{
+							"auto_name": "package RnDer",
+							"syntax": "Packages/Odin/odin.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1420.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "src/RnDer/math.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12213,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7457,
+								7457
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4417.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "src/RnDer/text.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7694,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								299,
+								299
+							]
+						],
+						"settings":
+						{
+							"auto_name": "package EnDer",
+							"syntax": "Packages/Odin/odin.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 80.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "src/RnDer/hud.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2087,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								282,
+								288
+							]
+						],
+						"settings":
+						{
+							"auto_name": "package RnDer",
+							"syntax": "Packages/Odin/odin.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 160.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "src/RnDer/perf.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2611,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2538,
+								2559
+							]
+						],
+						"settings":
+						{
+							"auto_name": "package RnDer",
+							"syntax": "Packages/Odin/odin.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 976.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "src/RnDer/engine.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3933,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								825,
+								825
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 437.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "src/RnDer/transform.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 799,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								799,
+								799
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "src/RnDer/scene.odin",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1132,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								311,
+								311
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Odin/odin.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 20,
 					"semi_transient": false,
 					"settings":
 					{
@@ -849,11 +1364,11 @@
 						"translation.y": 432.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 21,
 					"file": "src/RnDer/memory.odin",
 					"semi_transient": false,
 					"settings":
@@ -876,10 +1391,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1360.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 21,
 					"type": "text"
 				}
 			]
@@ -889,7 +1404,7 @@
 			"sheets":
 			[
 				{
-					"buffer": 9,
+					"buffer": 22,
 					"file": "/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-mousemap",
 					"semi_transient": false,
 					"settings":
@@ -913,24 +1428,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 23,
 					"file": "build.bat",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 77,
+						"buffer_size": 67,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								23,
-								32
+								67,
+								67
 							]
 						],
 						"settings":
@@ -941,40 +1456,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
-					"file": "/C/Users/ammar/odin/core/log/log.odin",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4131,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2923,
-								2003
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Odin/odin.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1949.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
+					"buffer": 24,
 					"file": "/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 					"semi_transient": false,
 					"settings":
@@ -986,8 +1472,8 @@
 						"selection":
 						[
 							[
-								153,
-								153
+								73,
+								73
 							]
 						],
 						"settings":
@@ -998,11 +1484,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 25,
 					"file": "/C/Users/ammar/AppData/Roaming/Sublime Text 3/Packages/Odin.sublime-build",
 					"semi_transient": false,
 					"settings":
@@ -1027,11 +1513,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 26,
 					"file": "OdinRenderers.sublime-project",
 					"semi_transient": false,
 					"settings":
@@ -1055,11 +1541,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 27,
 					"file": "test.bat",
 					"semi_transient": false,
 					"settings":
@@ -1083,7 +1569,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 24,
 					"type": "text"
 				}
 			]
@@ -1091,11 +1577,11 @@
 	],
 	"incremental_find":
 	{
-		"height": 31.0
+		"height": 29.0
 	},
 	"input":
 	{
-		"height": 44.0
+		"height": 47.0
 	},
 	"layout":
 	{
@@ -1117,7 +1603,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.451885369532,
 			1.0
 		],
 		"rows":
@@ -1129,7 +1615,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 406.0
+		"height": 262.0
 	},
 	"output.find_results":
 	{
@@ -1139,7 +1625,7 @@
 	"project": "OdinRenderers.sublime-project",
 	"replace":
 	{
-		"height": 79.0
+		"height": 54.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1177,7 +1663,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 199.0,
+	"side_bar_width": 232.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

@@ -120,7 +120,9 @@ RAWINPUT :: struct {
     }
 };
 
-RAWINPUTHEADER :: struct {
+HRAWINPUT__ :: struct {unused: INT};
+
+RAWINPUTHEADER :: struct #packed {
     dwType  : DWORD,
     dwSize  : DWORD,
     hDevice : HANDLE,

@@ -104,7 +104,7 @@ onUpdateFps :: proc(using engine: ^Engine) {
     if changed.position {
         // Update the current position:
         using camera.transform;
-        scale3D(current_velocity, delta_time, movement);
+        movement^ = current_velocity^ * delta_time;
         position.y += movement.y;
         position.z += movement.x * yaw.X.z + movement.z * yaw.Z.z;
         position.x += movement.x * yaw.X.x + movement.z * yaw.Z.x;
@@ -154,8 +154,8 @@ onMouseScrolledOrb :: inline proc(using engine: ^Engine) { // Dolly
     using controllers.orb;
     using camera.transform;
     
-    scale3D(forward, dolly_ratio, movement);
-    add3D(position, movement, target_position);
+    movement^ = forward^ * dolly_ratio; 
+    target_position^ = position^ + movement^;
 
     dolly_amount += dolly_speed * mouse.wheel.scroll;
     if      dolly_amount == 0 { dolly_ratio = target_distance; }
@@ -163,8 +163,8 @@ onMouseScrolledOrb :: inline proc(using engine: ^Engine) { // Dolly
     else                      { dolly_ratio = target_distance * (1 - dolly_amount)/2; }
 	
 	zoom_amount = dolly_amount;
-    scale3D(forward, dolly_ratio, movement);
-    sub3D(target_position, movement, position);
+	movement^ = forward^ * dolly_ratio;
+	position^ = target_position^ - movement^;
 
     changed.position = true;
 }
@@ -180,8 +180,8 @@ onMouseMovedOrb ::proc(using engine: ^Engine) {
         speed: f32 = f32(orbit_speed);
 
         // Compute target position:
-        scale3D(forward, dolly_ratio, movement);
-        add3D(position, movement, target_position);
+        movement^ = forward^ * dolly_ratio;
+        target_position^ = position^ + movement^;
 
         // Compute new orientation at target position:
         yaw3D(  speed * -x, yaw);
@@ -189,19 +189,19 @@ onMouseMovedOrb ::proc(using engine: ^Engine) {
         matMul3D(pitch, yaw, rotation);
 
         // Back-track from target position to new current position:
-        scale3D(forward, dolly_ratio, movement);
-        sub3D(target_position, movement, position);
+		movement^ = forward^ * dolly_ratio;
+        position^ = target_position^ - movement^;
 
         changed.orientation = true;
         changed.position = true;
     } else if mouse.buttons.middle.is_down { // Pan
         // Computed scaled up & right vectors:        
-        scale3D(right, pan_speed * -x, scaled_right);
-        scale3D(up,    pan_speed * +y, scaled_up);
+        scaled_right^ = right^ * pan_speed * -x;
+        scaled_up^    = up^    * pan_speed * +y;
         
         // Move current position by the combined movement:
-        add3D(scaled_right, scaled_up, movement);
-        iadd3D(position, movement);
+        movement^ = scaled_right^ + scaled_up^;
+        position^ += movement^;
 
         changed.position = true;
     }

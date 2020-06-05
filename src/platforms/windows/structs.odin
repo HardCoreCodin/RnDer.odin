@@ -128,3 +128,10 @@ RAWINPUTHEADER :: struct #packed {
     hDevice : HANDLE,
     wParam  : WPARAM
 };
+
+NTSTATUS  :: struct #packed {
+    dwType  : DWORD,
+    dwSize  : DWORD,
+    hDevice : HANDLE,
+    wParam  : WPARAM
+};

@@ -1,5 +1,10 @@
 package RnDer
 
+vec2 :: distinct [2]f32;
+vec3 :: distinct [3]f32;
+mat2 :: struct { X, Y   : ^vec2 };
+mat3 :: struct { X, Y, Z: ^vec3 };
+
 sqrtf :: proc(number: f32) -> f32 {
     i: i32;
     x, y: f32;
@@ -22,12 +27,33 @@ approach :: proc(current: ^f32, target, delta: f32) {
 	}
 }
 
-// Linear Algebra:
-// ===============
-vec2 :: struct #packed { x, y   : f32 };
-vec3 :: struct #packed { x, y, z: f32 };
-mat2 :: struct { X, Y   : ^vec2 };
-mat3 :: struct { X, Y, Z: ^vec3 };
+approach3D :: proc(#no_alias v: ^vec3, #no_alias target: ^vec3, delta: f32) {
+    approach(&v.x, target.x, delta);
+    approach(&v.y, target.y, delta);
+    approach(&v.z, target.z, delta);
+}
+
+getPointOnUnitCircle :: proc(t: f32) -> (point: vec2) {
+    t2 := t * t;
+    f := 1.0 / (1.0 + t2);
+
+    point.x = f - f * t2;
+    point.y = f * 2 * t;
+
+    return;
+}
+
+setPointOnUnitSphere :: proc(s, t: f32) -> (point: vec3) {
+    s2: f32 = s * s;
+    t2: f32 = t * t;
+    f : f32 = 1 / ( t2 + s2 + 1);
+    
+    point.x = 2 * s * f;
+    point.z = (t2 + s2 - 1) * t2;
+    point.y = 2 * t * f;
+
+    return;
+}
 
 // 2D :
 // ====
@@ -40,64 +66,27 @@ createMat2 :: proc() -> ^mat2 {
     
     return matrix;
 }
-getPointOnUnitCircle :: proc(t: f32) -> (point: vec2) {
-    t2 := t * t;
-    f := 1.0 / (1.0 + t2);
 
-    using point;
-    x = f - f * t2;
-    y = f * 2 * t;
-
-    return;
+mul2D :: proc(#no_alias lhs: ^vec2, using rhs: ^mat2, out: ^vec2) {
+    out.x = lhs.x * X.x + lhs.y * Y.x;
+    out.y = lhs.x * X.y + lhs.y * Y.y;
 }
-sub2D :: proc(#no_alias lhs: ^vec2, #no_alias rhs: ^vec2, using #no_alias out: ^vec2) {
-    x = lhs.x - rhs.x;
-    y = lhs.y - rhs.y;
-}
-isub :: proc(using #no_alias lhs: ^vec2, #no_alias rhs: ^vec2) {
-    x -= rhs.x;
-    y -= rhs.y;
-}
-add2D :: proc(#no_alias lhs: ^vec2, #no_alias rhs: ^vec2, using #no_alias o: ^vec2) {
-    x = lhs.x + rhs.x;
-    y = lhs.y + rhs.y;
-}
-iadd2D :: proc(using #no_alias lhs: ^vec2, #no_alias rhs: ^vec2) {
-    x += rhs.x;
-    y += rhs.y;
-}
-scale2D :: proc(#no_alias rhs: ^vec2, f: f32, using #no_alias o: ^vec2) {
-    x = f * rhs.x;
-    y = f * rhs.y;
-}
-iscale2D :: proc(using #no_alias lhs: ^vec2, f: f32) {
-    x *= f;
-    y *= f;
-}
-idirhsD :: proc(using #no_alias lhs: ^vec2, f: f32) {
-    x /= f;
-    y /= f;
-}
-mul2D :: proc(#no_alias lhs: ^vec2, using rhs: ^mat2, using out: ^vec2) {
-    x = lhs.x * X.x + lhs.y * Y.x;
-    y = lhs.x * X.y + lhs.y * Y.y;
-}
-imul2D :: proc(using #no_alias lhs: ^vec2, using rhs: ^mat2) {
+imul2D :: proc(#no_alias lhs: ^vec2, using rhs: ^mat2) {
     v := lhs^;
-    x = v.x * X.x + v.y * Y.x;
-    y = v.x * X.y + v.y * Y.y;
+    lhs.x = v.x * X.x + v.y * Y.x;
+    lhs.y = v.x * X.y + v.y * Y.y;
 };
 
 @(require_results)
-dot2D :: inline proc(using #no_alias lhs: ^vec2, #no_alias rhs: ^vec2) -> f32 do return ( 
-	x * rhs.x + 
-	y * rhs.y
+dot2D :: inline proc(#no_alias lhs: ^vec2, #no_alias rhs: ^vec2) -> f32 do return ( 
+	lhs.x * rhs.x + 
+	lhs.y * rhs.y
 );
 
 @(require_results)
-squaredLength2D :: inline proc(using #no_alias v: ^vec2) -> f32 do return (
-	x * x + 
-	y * y
+squaredLength2D :: inline proc(#no_alias v: ^vec2) -> f32 do return (
+	v.x * v.x + 
+	v.y * v.y
 );
 
 setMat2ToIdentity :: proc(using matrix: ^mat2) {
@@ -122,22 +111,22 @@ imatmul2D :: proc(using matrix: ^mat2, m: ^mat2) {
     Y.y = iY.x * m.X.y + iY.y * m.Y.y; // Row 2 | Column 2
 }
 rotateMatrix2D :: proc(using matrix: ^mat2, t: f32) {
-	using point := getPointOnUnitCircle(t);
+	point := getPointOnUnitCircle(t);
 
     iX:= X^;
     iY:= Y^;
 
-    X.x = x * iX.x + y * iX.y;
-    Y.x = x * iY.x + y * iY.y;
+    X.x = point.x * iX.x + point.y * iX.y;
+    Y.x = point.x * iY.x + point.y * iY.y;
 
-    X.y = x * iX.y - y * iX.x;
-    Y.y = x * iY.y - y * iY.x;
+    X.y = point.x * iX.y - point.y * iX.x;
+    Y.y = point.x * iY.y - point.y * iY.x;
 };
 setRotation2D :: proc(using matrix: ^mat2, t: f32) {
-	using point := getPointOnUnitCircle(t);
+	point := getPointOnUnitCircle(t);
 
-    X.x = x; X.y = -y;    
-    Y.x = y; Y.y = x;
+    X.x = point.x; X.y = -point.y;    
+    Y.x = point.y; Y.y =  point.x;
 };
 rotate2D :: proc(matrix: ^mat2, t: f32) {
     setRotation2D(&temp_mat2, t);
@@ -159,88 +148,34 @@ createMat3 :: proc() -> ^mat3 {
     return matrix;
 }
 
-fill3D :: inline proc(using #no_alias vector: ^vec3, value: f32) { 
-	x = value;
-	y = value;
-	z = value; 
+mul3D :: proc(#no_alias lhs: ^vec3, using matrix: ^mat3, #no_alias out: ^vec3) {
+    out.x = lhs.x * X.x + lhs.y * Y.x + lhs.z * Z.x;
+    out.y = lhs.x * X.y + lhs.y * Y.y + lhs.z * Z.y;
+    out.z = lhs.x * X.z + lhs.y * Y.z + lhs.z * Z.z;    
 }
-
-approach3D :: proc(using #no_alias vector: ^vec3, #no_alias target: ^vec3, delta: f32) {
-    approach(&x, target.x, delta);
-    approach(&y, target.y, delta);
-    approach(&z, target.z, delta);
-}
-setPointOnUnitSphere :: proc(s, t: f32) -> (point: vec3) {
-    s2: f32 = s * s;
-    t2: f32 = t * t;
-    f : f32 = 1 / ( t2 + s2 + 1);
-    
-    using point;
-    x = 2 * s * f;
-    z = (t2 + s2 - 1) * t2;
-    y = 2 * t * f;
-
-    return;
-}
-
-sub3D :: proc(#no_alias lhs: ^vec3, #no_alias rhs: ^vec3, using #no_alias out: ^vec3) {
-    x = lhs.x - rhs.x;
-    y = lhs.y - rhs.y;
-    z = lhs.z - rhs.z;
-}
-isub3D :: proc(using #no_alias i: ^vec3, #no_alias rhs: ^vec3) {
-    x -= rhs.x;
-    y -= rhs.y;
-    z -= rhs.z;
-}
-add3D :: proc(#no_alias lhs: ^vec3, #no_alias rhs: ^vec3, using #no_alias out: ^vec3) {
-    x = lhs.x + rhs.x;
-    y = lhs.y + rhs.y;
-    z = lhs.z + rhs.z;
-}
-iadd3D :: proc(using #no_alias lhs: ^vec3, #no_alias rhs: ^vec3) {
-    x += rhs.x;
-    y += rhs.y;
-    z += rhs.z;
-}
-scale3D :: proc(#no_alias lhs: ^vec3, f: f32, #no_alias using out: ^vec3) {
-    y = lhs.y * f;
-    z = lhs.z * f;
-    x = lhs.x * f;
-}
-iscale3D :: proc(using #no_alias i: ^vec3, f: f32) {
-    x *= f;
-    y *= f;
-    z *= f;
-}
-mul3D :: proc(#no_alias lhs: ^vec3, using matrix: ^mat3, using #no_alias out: ^vec3) {
-    x = lhs.x * X.x + lhs.y * Y.x + lhs.z * Z.x;
-    y = lhs.x * X.y + lhs.y * Y.y + lhs.z * Z.y;
-    z = lhs.x * X.z + lhs.y * Y.z + lhs.z * Z.z;    
-}
-imul3D :: proc(using #no_alias lhs: ^vec3, using matrix: ^mat3) {
+imul3D :: proc(#no_alias lhs: ^vec3, using matrix: ^mat3) {
     v := lhs^;
-    x = v.x * X.x + v.y * Y.x + v.z * Z.x;
-    y = v.x * X.y + v.y * Y.y + v.z * Z.y;
-    z = v.x * X.z + v.y * Y.z + v.z * Z.z;    
+    lhs.x = v.x * X.x + v.y * Y.x + v.z * Z.x;
+    lhs.y = v.x * X.y + v.y * Y.y + v.z * Z.y;
+    lhs.z = v.x * X.z + v.y * Y.z + v.z * Z.z;    
 }
-cross3D :: proc(#no_alias lhs: ^vec3, #no_alias rhs: ^vec3, using #no_alias o: ^vec3) {
-    x = lhs.y * rhs.z - lhs.z * rhs.y;
-    y = lhs.z * rhs.x - lhs.x * rhs.z;
-    z = lhs.x * rhs.y - lhs.y * rhs.x;
+cross3D :: proc(#no_alias lhs: ^vec3, #no_alias rhs: ^vec3, #no_alias out: ^vec3) {
+    out.x = lhs.y * rhs.z - lhs.z * rhs.y;
+    out.y = lhs.z * rhs.x - lhs.x * rhs.z;
+    out.z = lhs.x * rhs.y - lhs.y * rhs.x;
 }
 
 @(require_results)
-dot3D :: inline proc(using #no_alias lhs: ^vec3, #no_alias rhs: ^vec3) -> f32 do return (
-	x * rhs.x + 
-	y * rhs.y + 
-	z * rhs.z
+dot3D :: inline proc(#no_alias lhs: ^vec3, #no_alias rhs: ^vec3) -> f32 do return (
+	lhs.x * rhs.x + 
+	lhs.y * rhs.y + 
+	lhs.z * rhs.z
 );
 @(require_results)
-squaredLength3D :: inline proc(using #no_alias vector: ^vec3) -> f32 do return (
-	x * x + 
-	y * y + 
-	z * z
+squaredLength3D :: inline proc(#no_alias v: ^vec3) -> f32 do return (
+	v.x * v.x + 
+	v.y * v.y + 
+	v.z * v.z
 );
 setMat3ToIdentity :: proc(using matrix: ^mat3) {
     X.x = 1; X.y = 0; X.z = 0;
@@ -285,121 +220,112 @@ imatMul3D :: proc(using lhs: ^mat3, rhs: ^mat3) {
 
 relativeYaw3D :: proc(t: f32, using out: ^mat3) {
     point := getPointOnUnitCircle(t);
-    using point;
 
     lhs_X := X^;
     lhs_Y := Y^;
     lhs_Z := Z^;
 
-    X.x = x * lhs_X.x - y * lhs_X.z;
-    Y.x = x * lhs_Y.x - y * lhs_Y.z;
-    Z.x = x * lhs_Z.x - y * lhs_Z.z;
+    X.x = point.x * lhs_X.x - point.y * lhs_X.z;
+    Y.x = point.x * lhs_Y.x - point.y * lhs_Y.z;
+    Z.x = point.x * lhs_Z.x - point.y * lhs_Z.z;
 
-    X.z = x * lhs_X.z + y * lhs_X.x;
-    Y.z = x * lhs_Y.z + y * lhs_Y.x;
-    Z.z = x * lhs_Z.z + y * lhs_Z.x;
+    X.z = point.x * lhs_X.z + point.y * lhs_X.x;
+    Y.z = point.x * lhs_Y.z + point.y * lhs_Y.x;
+    Z.z = point.x * lhs_Z.z + point.y * lhs_Z.x;
 };
 relativePitch3D :: proc(t: f32, using out: ^mat3) {
 	point := getPointOnUnitCircle(t);
-	using point;
 
     lhs_X := X^;
     lhs_Y := Y^;
     lhs_Z := Z^;
 
-    X.y = x * lhs_X.y + y * lhs_X.z;
-    Y.y = x * lhs_Y.y + y * lhs_Y.z;
-    Z.y = x * lhs_Z.y + y * lhs_Z.z;
+    X.y = point.x * lhs_X.y + point.y * lhs_X.z;
+    Y.y = point.x * lhs_Y.y + point.y * lhs_Y.z;
+    Z.y = point.x * lhs_Z.y + point.y * lhs_Z.z;
 
-    X.z = x * lhs_X.z - y * lhs_X.y;
-    Y.z = x * lhs_Y.z - y * lhs_Y.y;
-    Z.z = x * lhs_Z.z - y * lhs_Z.y;
+    X.z = point.x * lhs_X.z - point.y * lhs_X.y;
+    Y.z = point.x * lhs_Y.z - point.y * lhs_Y.y;
+    Z.z = point.x * lhs_Z.z - point.y * lhs_Z.y;
 };
 relativeRoll3D :: proc(t: f32, using out: ^mat3) {
     point := getPointOnUnitCircle(t);
-    using point;
 
     lhs_X := X^;
     lhs_Y := Y^;
     lhs_Z := Z^;
 
-    X.x = x * lhs_X.x + y * lhs_X.y;
-    Y.x = x * lhs_Y.x + y * lhs_Y.y;
-    Z.x = x * lhs_Z.x + y * lhs_Z.y;
+    X.x = point.x * lhs_X.x + point.y * lhs_X.y;
+    Y.x = point.x * lhs_Y.x + point.y * lhs_Y.y;
+    Z.x = point.x * lhs_Z.x + point.y * lhs_Z.y;
 
-    X.y = x * lhs_X.y - y * lhs_X.x;
-    Y.y = x * lhs_Y.y - y * lhs_Y.x;
-    Z.y = x * lhs_Z.y - y * lhs_Z.x;
+    X.y = point.x * lhs_X.y - point.y * lhs_X.x;
+    Y.y = point.x * lhs_Y.y - point.y * lhs_Y.x;
+    Z.y = point.x * lhs_Z.y - point.y * lhs_Z.x;
 };
 yaw3D :: proc(t: f32, using out: ^mat3) {
     point := getPointOnUnitCircle(t);
-    using point;
     
     lhs_X := X^;
     lhs_Y := Y^;
     lhs_Z := Z^;
 
-    X.x = x * lhs_X.x - y * lhs_X.z;
-    Y.x = x * lhs_Y.x - y * lhs_Y.z;
-    Z.x = x * lhs_Z.x - y * lhs_Z.z;
+    X.x = point.x * lhs_X.x - point.y * lhs_X.z;
+    Y.x = point.x * lhs_Y.x - point.y * lhs_Y.z;
+    Z.x = point.x * lhs_Z.x - point.y * lhs_Z.z;
 
-    X.z = x * lhs_X.z + y * lhs_X.x;
-    Y.z = x * lhs_Y.z + y * lhs_Y.x;
-    Z.z = x * lhs_Z.z + y * lhs_Z.x;
+    X.z = point.x * lhs_X.z + point.y * lhs_X.x;
+    Y.z = point.x * lhs_Y.z + point.y * lhs_Y.x;
+    Z.z = point.x * lhs_Z.z + point.y * lhs_Z.x;
 };
 pitch3D :: proc(t: f32, using out: ^mat3) {
     point := getPointOnUnitCircle(t);
-    using point;
 
     lhs_X := X^;
     lhs_Y := Y^;
     lhs_Z := Z^;
 
-    X.y = x * lhs_X.y + y * lhs_X.z;
-    Y.y = x * lhs_Y.y + y * lhs_Y.z;
-    Z.y = x * lhs_Z.y + y * lhs_Z.z;
+    X.y = point.x * lhs_X.y + point.y * lhs_X.z;
+    Y.y = point.x * lhs_Y.y + point.y * lhs_Y.z;
+    Z.y = point.x * lhs_Z.y + point.y * lhs_Z.z;
 
-    X.z = x * lhs_X.z - y * lhs_X.y;
-    Y.z = x * lhs_Y.z - y * lhs_Y.y;
-    Z.z = x * lhs_Z.z - y * lhs_Z.y;
+    X.z = point.x * lhs_X.z - point.y * lhs_X.y;
+    Y.z = point.x * lhs_Y.z - point.y * lhs_Y.y;
+    Z.z = point.x * lhs_Z.z - point.y * lhs_Z.y;
 };
 
 roll3D :: proc(t: f32, using out: ^mat3) {
     point := getPointOnUnitCircle(t);
-    using point;
 
     lhs_X := X^;
     lhs_Y := Y^;
     lhs_Z := Z^;
     
-    X.x = x * lhs_X.x + y * lhs_X.y;
-    Y.x = x * lhs_Y.x + y * lhs_Y.y;
-    Z.x = x * lhs_Z.x + y * lhs_Z.y;
+    X.x = point.x * lhs_X.x + point.y * lhs_X.y;
+    Y.x = point.x * lhs_Y.x + point.y * lhs_Y.y;
+    Z.x = point.x * lhs_Z.x + point.y * lhs_Z.y;
 
-    X.y = x * lhs_X.y - y * lhs_X.x;
-    Y.y = x * lhs_Y.y - y * lhs_Y.x;
-    Z.y = x * lhs_Z.y - y * lhs_Z.x;
+    X.y = point.x * lhs_X.y - point.y * lhs_X.x;
+    Y.y = point.x * lhs_Y.y - point.y * lhs_Y.x;
+    Z.y = point.x * lhs_Z.y - point.y * lhs_Z.x;
 };
 setYaw3D :: proc(t: f32, using out: ^mat3) {
     point := getPointOnUnitCircle(t);
-	using point;
 
-    X.x =  x; X.z = y;
-    Z.x = -y; Z.z = x;
+    X.x =  point.x; X.z = point.y;
+    Z.x = -point.y; Z.z = point.x;
 };
 setPitch3D :: proc(t: f32, using out: ^mat3) {
     point := getPointOnUnitCircle(t);
-	using point;
     
-    Y.y = x; Y.z = -y;
-    Z.y = y; Z.z = x;
+    Y.y = point.x; Y.z = -point.y;
+    Z.y = point.y; Z.z = point.x;
 };
 setRoll3D :: proc(t: f32, using out: ^mat3) {
     point := getPointOnUnitCircle(t);
-	using point;
     
-    X.x = x; X.y = -y;
-    Y.x = y; Y.y = x;
+    X.x = point.x; X.y = -point.y;
+    Y.x = point.y; Y.y =  point.x;
 };
 rotateRelative3D :: proc(yaw, pitch, roll: f32, out: ^mat3) {
     if yaw   != 0 do relativeYaw3D(    yaw, out);

@@ -40,11 +40,9 @@ createScene :: proc() -> ^Scene {
 
             view_position = Alloc(vec3);
             world_position = Alloc(vec3);
-            
-            using world_position;
-            x = f32(sphere_x);
-            y = 0.0;
-            z = f32(sphere_z);
+            world_position.x = f32(sphere_x);
+            world_position.y = 0.0;
+            world_position.z = f32(sphere_z);
 
             sphere_x += gap;
             sphere_index += 1;

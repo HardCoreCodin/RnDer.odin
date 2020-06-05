@@ -20,6 +20,7 @@ UINT_PTR  :: distinct u64;
 PUINT     :: distinct ^u32;
 LONG_PTR  :: distinct i64;
 ULONG_PTR :: distinct ^u32;
+PVOID     :: distinct rawptr;
 LPVOID    :: distinct rawptr;
 HANDLE    :: distinct rawptr;
 HWND      :: distinct HANDLE;

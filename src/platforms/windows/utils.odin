@@ -1,7 +1,7 @@
 package win
 
-WNDPROC   :: distinct #type proc "std" (HWND, UINT, WPARAM, LPARAM) -> LRESULT;
 
+WNDPROC   :: distinct #type proc "std" (HWND, UINT, WPARAM, LPARAM) -> LRESULT;
 
 LOWORD :: proc(dwValue: DWORD) -> WORD {
     return WORD(

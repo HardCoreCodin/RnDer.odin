@@ -83,7 +83,7 @@ onMoveRT :: proc(engine: ^Engine) {
 	
 	for i in 0..<SPHERE_COUNT {
 		sphere = &scene.spheres[i];
-        sub3D(world_position, position, view_position);
+        view_position^ = world_position^ - position^;
         imul3D(view_position, ray_tracer.inverted_camera_rotation);
     }
 
@@ -114,15 +114,11 @@ createRayTracer :: proc(engine: ^Engine) -> ^RayTracer {
 
 MAX_COLOR_VALUE :: 0xFF;
 
-shadeClosestHitByNormal :: inline proc(using closestHit: ^RayHit, pixel: ^Pixel) {
+shadeClosestHitByNormal :: inline proc(using closestHit: ^RayHit, using pixel: ^Pixel) {
     factor: f32 = 4.0 * MAX_COLOR_VALUE / distance;
-    R: f32 = factor * (normal.x + 1.0);
-    G: f32 = factor * (normal.y + 1.0);
-    B: f32 = factor * (normal.z + 1.0);
-
-    pixel.color.R = R > MAX_COLOR_VALUE ? MAX_COLOR_VALUE : u8(R);
-    pixel.color.G = G > MAX_COLOR_VALUE ? MAX_COLOR_VALUE : u8(G);
-    pixel.color.B = B > MAX_COLOR_VALUE ? MAX_COLOR_VALUE : u8(B);
+    color.R = u8(clamp(factor * (normal.x + 1.0), 0, MAX_COLOR_VALUE));
+    color.G = u8(clamp(factor * (normal.y + 1.0), 0, MAX_COLOR_VALUE));
+    color.B = u8(clamp(factor * (normal.z + 1.0), 0, MAX_COLOR_VALUE));
 }
 
 rayIntersectsWithSpheres :: proc(
@@ -154,8 +150,8 @@ rayIntersectsWithSpheres :: proc(
 
         o2c = dot3D(ray_direction, s);
         if o2c > 0 {
-            scale3D(ray_direction, o2c, p);
-            sub3D(s, p, t);
+            p^ = ray_direction^ * o2c;
+            t^ = s^ - p^;
             d2 = dot3D(t, t);
             if d2 <= r2 {
                 r2_minus_d2 = r2 - d2;
@@ -173,12 +169,11 @@ rayIntersectsWithSpheres :: proc(
     if R != 0 {
         if R2_minus_D2 > 0.001 {
             distance = O2C - sqrtf(R2_minus_D2);
-            scale3D(ray_direction, distance, position);
+            position^ = ray_direction^ * distance;
         }
 
-        sub3D(position, S, normal);
-        if (R != 1) do
-            iscale3D(normal, 1 / R);
+        normal^ = position^ - S^;
+        if R != 1 do normal^ /= R;
 
         return true;
     } else do

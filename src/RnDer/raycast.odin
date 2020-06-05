@@ -22,13 +22,14 @@ generateRays2D :: inline proc(engine: ^Engine) {
     using renderers.ray_caster;
     using active_viewport.controller.camera;
     using transform2D.rotation;
-    right, ray: vec2;
-    scale2D(X, (1 - f32(width)) / 2, &right);
-    scale2D(Y, f32(height) * focal_length / 2, &ray);
-    iadd2D(&ray, &right);
+    
+    right := X^ * ((1 - f32(width)) / 2);
+    ray   := Y^ * (f32(height) * focal_length / 2);
+    ray += right;
+    
     for i in 0..<width {
-        scale2D(&ray, 1 / sqrtf(ray.x*ray.x + ray.y*ray.y), &ray_directions[i]);
-        iadd2D(&ray, X);
+        ray_directions[i] = ray / sqrtf(ray.x*ray.x + ray.y*ray.y);
+        ray += right;
     }
 }
 

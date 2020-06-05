@@ -13,6 +13,18 @@ foreign user {
         lpCursorName : LPSTR
     ) -> HCURSOR ---;
 
+    PeekMessageA :: proc(
+        lpMsg         : LPMSG,
+        hWnd          : HWND,
+        wMsgFilterMin : UINT,
+        wMsgFilterMax : UINT,
+        wRemoveMsg    : UINT
+    ) -> BOOL ---;
+    
+    TranslateMessage :: proc(
+        lpMsg: ^MSG
+    ) -> BOOL ---;
+
     RegisterClassA :: proc(
         lpWndClass: ^WNDCLASSA
     ) -> WORD ---;
@@ -76,18 +88,6 @@ foreign user {
         hInstance    : HINSTANCE,
         lpParam      : LPVOID
     ) -> HWND ---;
-        
-    PeekMessageA :: proc(
-        lpMsg         : LPMSG,
-        hWnd          : HWND,
-        wMsgFilterMin : UINT,
-        wMsgFilterMax : UINT,
-        wRemoveMsg    : UINT
-    ) -> BOOL ---;
-    
-    TranslateMessage :: proc(
-        lpMsg: ^MSG
-    ) -> BOOL ---;
     
     SetWindowTextA :: proc(
         hWnd     : HWND,
